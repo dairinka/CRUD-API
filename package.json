@@ -1,0 +1,49 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "Simple CRUD API using in-memory database underneath",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon src/index.ts",
+    "start2:dev": "tsnd --respawn src/index.ts",
+    "start3:dev": "ts-node-dev -p tsconfig.development.json --respawn --files src/index.ts",
+    "start:prod": "npm run build && node dist/index.js",
+    "build": "tsc -p tsconfig.production.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dairinka/CRUD-API.git"
+  },
+  "keywords": [
+    "in-memory",
+    "database",
+    "CRUD",
+    "API"
+  ],
+  "author": "dairinka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dairinka/CRUD-API/issues"
+  },
+  "homepage": "https://github.com/dairinka/CRUD-API#readme",
+  "dependencies": {
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.2",
+    "@types/uuid": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "uuid": "^9.0.0"
+  }
+}
