@@ -1,15 +1,15 @@
 export interface IServerAnswer {
   resolve?: IServerResolve;
-  reject?: IServerReject;
+  status?: IStatusCode;
 }
 export interface IServerResolve {
   id: string;
   username: string;
   age: number;
   hobbies: string[] | [];
-  statusCode: number;
 }
-export interface IServerReject {
+
+export interface IStatusCode {
   statusCode: number;
   message: string;
 }
