@@ -5,10 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "nodemon src/index.ts",
+    "start:dev": "nodemon --exec ts-node src/index.ts --project ./tsconfig.json",
     "start2:dev": "tsnd --respawn src/index.ts",
     "start3:dev": "ts-node-dev --respawn --files src/index.ts",
-    "start4:dev": "nodemon --exec ts-node src/index.ts --project ./tsconfig.json",
+    "start4:dev": "nodemon src/index.ts",
     "start:prod": "npm run build && node dist/index.js",
     "build": "tsc -p tsconfig.production.json",
     "lint": "eslint . --ext .ts",
