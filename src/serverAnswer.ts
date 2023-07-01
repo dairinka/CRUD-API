@@ -16,21 +16,29 @@ const fakeData: IServerResolve = {
 };
 
 const serverAnswer = (dataToServer: IServerGet): IServerAnswer => {
-  console.log(dataToServer.url, dataToServer.method);
-  const endpoint = '/api/users';
-  if (dataToServer.url.match(/^\/api\/users./)) {
+  console.log(dataToServer.url, dataToServer.method, dataToServer.data);
+  const userId = dataToServer.url.slice(10);
+  const regExp = /^\/api\/users/;
+  console.log('userId', userId);
+  console.log('dataToServer.url', dataToServer.url);
+  console.log('regExp.test(dataToServer.url)', regExp.test(dataToServer.url));
+  if (regExp.test(dataToServer.url)) {
     const db = currentUserDb;
+    // if (!userId.match(/a/)) {
+    //   return { status: { statusCode: 400, message: 'userId is invalid ' } };
+    // }
     switch (dataToServer.method) {
       case 'PUT':
-        db.addUser();
+        if (userId) return db.updateUserById(userId, JSON.parse(dataToServer.data));
         break;
       case 'GET':
-        db.getUsers();
+        return userId ? db.getUsersById(userId) : db.getUsers();
         break;
       case 'POST':
+        return db.addUser(JSON.parse(dataToServer.data));
         break;
       case 'DELETE':
-        db.deleteUserById();
+        if (userId) return db.deleteUserById(userId);
         break;
       default:
         return;

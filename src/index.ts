@@ -12,6 +12,9 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
   req.on('data', (chunk) => {
     dataFromUser += chunk;
   });
+  req.on('error', () => {
+    console.log('Something went wrong');
+  });
   req.on('end', () => {
     res.setHeader('Content-Type', 'application/json');
     const method = req.method as HttpMethod;
@@ -20,9 +23,9 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
       method: method,
       data: dataFromUser,
     });
-    const dataAnswer = JSON.stringify(answer.resolve) || '';
-    res.statusCode = answer.status.statusCode || 200;
-    res.statusMessage = answer.status?.message;
+    const dataAnswer = JSON.stringify(answer?.resolve) || answer?.status?.message || '';
+    res.statusCode = answer?.status?.statusCode || 200;
+    res.statusMessage = answer?.status?.message;
 
     res.end(dataAnswer);
   });

@@ -1,5 +1,5 @@
 export interface IServerAnswer {
-  resolve?: IServerResolve;
+  resolve?: IServerResolve[] | IServerResolve;
   status?: IStatusCode;
 }
 export interface IServerResolve {
