@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { IServerResolve, IServerAnswer } from '../types/types';
 
 interface IUserData {
@@ -8,20 +8,28 @@ interface IUserData {
 }
 
 class UsersDb {
-  database: Map<string, IServerResolve> | null;
+  database: Map<string, IServerResolve>;
 
   constructor() {
     this.database = new Map();
   }
 
   addUser(data: IUserData): IServerAnswer {
-    const uniqueId = uuidv4();
-    //ToDo check data.hobbies on empty array
-    // if (!data.age || !data.hobbies || !data.username) {
-    //   return {
-    //     status: { statusCode: 404, message: 'request body does not contain required fields' },
-    //   };
-    // }
+    const uniqueId = randomUUID();
+    if (!data.age || !data.hobbies || !data.username) {
+      return {
+        status: { statusCode: 400, message: 'request body does not contain required fields' },
+      };
+    }
+    if (
+      typeof data.age !== 'number' ||
+      !Array.isArray(data.hobbies) ||
+      typeof data.username !== 'string'
+    ) {
+      return {
+        status: { statusCode: 400, message: 'field is invalid' },
+      };
+    }
     const userData: IServerResolve = {
       id: uniqueId,
       username: data.username,
@@ -30,49 +38,55 @@ class UsersDb {
     };
 
     this.database.set(uniqueId, userData);
-    return { status: { statusCode: 201, message: 'create new user' } };
+    return {
+      resolve: userData,
+      status: { statusCode: 201 },
+    };
   }
-  //ToDo return all users
+
   getUsers(): IServerAnswer {
-    // console.log('map.values');
-    // console.log(this.database.values());
-    // console.log('map.entries');
-    // console.log(this.database.entries());
     const userArr = Array.from(this.database.values());
     return { resolve: userArr };
   }
 
   getUsersById(id: string): IServerAnswer {
-    return this.isIdExist(id)
-      ? { status: { statusCode: 200, message: `id === ${id}` } }
-      : { status: { statusCode: 404, message: 'id is not exist' } };
+    return { resolve: this.database.get(id) };
   }
-  //ToDo check is id UUIDV4
+
   isIdExist(id: string): boolean {
     return this.database.has(id);
   }
 
   updateUserById(id: string, data: IUserData): IServerAnswer {
     if (this.isIdExist(id)) {
-      const userData: IServerResolve = {
-        id: id,
-        username: data.username,
-        age: data.age,
-        hobbies: data.hobbies,
-      };
+      const oldData = this.database.get(id);
+      if (oldData) {
+        if (
+          (data.age !== undefined && typeof data.age !== 'number') ||
+          (data.hobbies !== undefined && !Array.isArray(data.hobbies)) ||
+          (data.username !== undefined && typeof data.username !== 'string')
+        ) {
+          return {
+            status: { statusCode: 400, message: 'field is invalid' },
+          };
+        }
+        const userData: IServerResolve = {
+          id: id,
+          username: data.username || oldData.username,
+          age: data.age || oldData.age,
+          hobbies: data.hobbies || oldData.hobbies,
+        };
 
-      this.database.set(id, userData);
-      return { status: { statusCode: 200, message: 'user info was update' } };
+        this.database.set(id, userData);
+        return { resolve: this.database.get(id) };
+      }
     }
     return { status: { statusCode: 404, message: 'id is not exist' } };
   }
 
   deleteUserById(id: string): IServerAnswer {
-    if (this.isIdExist(id)) {
-      this.database.delete(id);
-      return { status: { statusCode: 204, message: 'user info was deleted' } };
-    }
-    return { status: { statusCode: 404, message: 'id is not exist' } };
+    this.database.delete(id);
+    return { status: { statusCode: 204 } };
   }
 }
 

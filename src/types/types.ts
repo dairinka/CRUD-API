@@ -11,6 +11,13 @@ export interface IServerResolve {
 
 export interface IStatusCode {
   statusCode: number;
-  message: string;
+  message?: string;
 }
+
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+export interface IServerGet {
+  url: string;
+  method: HttpMethod;
+  data?: string;
+}
