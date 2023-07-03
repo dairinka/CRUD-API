@@ -33,18 +33,20 @@ Production mode:
    npm run start:prod
    ```
    
-Starts multiple instances
-
-    ```bash
-    npm run start:multi
-    ```
+Starts multiple instances:
+  
+   ```bash
+   npm run start:multi
+   ```
     
     
 
 ## Test the application
 
+
 ```bash
 npm run test
+
 ```
 
 
